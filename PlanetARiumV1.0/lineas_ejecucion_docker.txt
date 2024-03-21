@@ -1,0 +1,37 @@
+Antes de ejecutar los contenedores hay que tener descargadas las imagenes de docker. Eso se realiza con docker pull.
+
+docker pull planetariumapp/video_capturer:v1
+docker pull planetariumapp/feature_communicator:v1
+docker pull planetariumapp/filter_selector:v1
+docker pull planetariumapp/planet_tracker:v1
+docker pull planetariumapp/galaxy_tracker:v1
+docker pull planetariumapp/visualizer:v1
+
+-- Video Capturer --
+
+docker run -e=CENTRAL_HOST='192.168.1.21' -e=CENTRAL_PORT=8000 --device=/dev/video0:/dev/video0 planetariumapp/video_capturer:v1
+
+
+-- Feature Communicator --
+
+docker run -p 192.168.1.21:8090:8090 -p 192.168.1.21:8091:8091 -e=CENTRAL_HOST='192.168.1.21' -e=CENTRAL_PORT=8000 -e=SERVER_HOST='192.168.1.21' -e=FRAME_PORT=8090 -e=REQUEST_PORT=8091 -e=PLANET_FEATURE='included' -e=GALAXY_FEATURE='included' planetariumapp/feature_communicator:v1
+
+
+-- Filter Selector --
+
+docker run -p 192.168.1.21:8092:8092 -p 192.168.1.21:8093:8093 -e=CENTRAL_HOST='192.168.1.21' -e=CENTRAL_PORT=8000 -e=SERVER_HOST='192.168.1.21' -e=FRAME_PORT=8092 -e=REQUEST_PORT=8093 -e=CONFIGURATION='galactic' planetariumapp/filter_selector:v1
+
+
+-- Planet Tracker --
+
+docker run -p 192.168.1.21:8096:8096 -e=CENTRAL_HOST='192.168.1.21' -e=CENTRAL_PORT=8000 -e=SERVER_HOST='192.168.1.21' -e=FRAME_PORT=8096 planetariumapp/planet_tracker:v1
+
+
+-- Galaxy Tracker --
+
+docker run -p 192.168.1.21:8098:8098 -e=CENTRAL_HOST='192.168.1.21' -e=CENTRAL_PORT=8000 -e=SERVER_HOST='192.168.1.21' -e=FRAME_PORT=8098 planetariumapp/galaxy_tracker:v1
+
+-- Visualizer --
+
+docker run -p 192.168.1.21:8100:8100 planetariumapp/visualizer:v1
+

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizar video</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src='/socket.io/socket.io.js'></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+</head>
+
+<body>
+    <script src="js/config.js"></script>
+    <script src="js/three.js"></script>
+
+    <img id="play" src="" alt="">
+
+    <div class="container-fluid contenedor--div">
+
+        <div class="icono--div">
+            <div class="icono">
+                <a href="#">
+                    <span class="span__raya"></span>
+                    <span class="span__raya"></span>
+                    <span class="span__raya"></span>
+                </a>
+            </div>
+        </div>
+
+        <div class="contenedor--menu">
+            <ul class="menu">
+                <li class="menu-index">Preferences</li>
+                <li class="menu-preference">
+                    <label for="filter">Filter</label>
+                    <select class="form-select" name="filter" id="filter">
+                        <option value="none" selected>None</option>
+                        <option value="galactic">Galactic</option>
+                        <option value="sky">Sky</option>
+                    </select>
+                </li>
+                <li class="menu-preference">
+                    <label for="resolution">Resolution</label>
+                    <select class="form-select" name="resolution" id="resolution">
+                        <option value="240">240p</option>
+                        <option value="320" selected>320p</option>
+                        <option value="480">480p</option>
+                        <option value="720">720p</option>
+                    </select>
+                </li>
+                <li class="menu-index">Features</li>
+                <li class="menu-feature">
+                    <p>Planets</p>
+                    <label class="switch">
+                        <input type="checkbox" id="planets" checked>
+                        <span class="slider round"></span>
+                  </label></a>
+                </li>
+                <li class="menu-feature">
+                    <p>Galaxies</p>
+                    <label class="switch">
+                        <input type="checkbox" id="galaxies" checked>
+                        <span class="slider round"></span>
+                  </label></a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+
+
+    <script>
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        document.body.appendChild( renderer.domElement );
+
+        const starGeometry = new THREE.SphereGeometry(0.3, 32, 20);
+        const starMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff } );
+
+        const cubeA = new THREE.Mesh( starGeometry, starMaterial );
+        const cubeB = new THREE.Mesh( starGeometry, starMaterial );
+        const cubeC = new THREE.Mesh( starGeometry, starMaterial );
+        const cubeD = new THREE.Mesh( starGeometry, starMaterial );
+        const cubeE = new THREE.Mesh( starGeometry, starMaterial );
+        const cubeF = new THREE.Mesh( starGeometry, starMaterial );
+        const cubeG = new THREE.Mesh( starGeometry, starMaterial );
+        const cubeH = new THREE.Mesh( starGeometry, starMaterial );
+        const cubeI = new THREE.Mesh( starGeometry, starMaterial );
+        const cubeJ = new THREE.Mesh( starGeometry, starMaterial );
+        const cubeK = new THREE.Mesh( starGeometry, starMaterial );
+        const cubeL = new THREE.Mesh( starGeometry, starMaterial );
+
+        scene.add( cubeA );
+        scene.add( cubeB );
+        scene.add( cubeC );
+        scene.add( cubeD );
+        scene.add( cubeE );
+        scene.add( cubeF );
+        scene.add( cubeG );
+        scene.add( cubeH );
+        scene.add( cubeI );
+        scene.add( cubeJ );
+        scene.add( cubeK );
+        scene.add( cubeL );
+
+        hideCubes(12);
+
+        const loader = new THREE.TextureLoader();
+
+        const mercuryGeometry = new THREE.SphereGeometry( 1, 32, 20 );
+        const mercuryMaterial = new THREE.MeshBasicMaterial( { map: loader.load('resources/mercurymap.jpg') } );
+        const planetMercury = new THREE.Mesh( mercuryGeometry, mercuryMaterial );
+
+        const venusGeometry = new THREE.SphereGeometry( 1.4, 32, 20 );
+        const venusMaterial = new THREE.MeshBasicMaterial( { map: loader.load('resources/venusmap.jpg') } );
+        const planetVenus = new THREE.Mesh( venusGeometry, venusMaterial );
+
+        const earthGeometry = new THREE.SphereGeometry( 1.6, 32, 20 );
+        const earthMaterial = new THREE.MeshBasicMaterial( { map: loader.load('resources/earthmap.jpg') } );
+        const planetEarth = new THREE.Mesh( earthGeometry, earthMaterial );
+
+        const marsGeometry = new THREE.SphereGeometry( 1.3, 32, 20 );
+        const marsMaterial = new THREE.MeshBasicMaterial( { map: loader.load('resources/marsmap.jpg') } );
+        const planetMars = new THREE.Mesh( marsGeometry, marsMaterial );
+
+        const jupiterGeometry = new THREE.SphereGeometry( 3.0, 32, 20 );
+        const jupiterMaterial = new THREE.MeshBasicMaterial( { map: loader.load('resources/jupitermap.jpg') } );
+        const planetJupiter = new THREE.Mesh( jupiterGeometry, jupiterMaterial );
+
+        const saturnGeometry = new THREE.SphereGeometry( 2.8, 32, 20 );
+        const saturnMaterial = new THREE.MeshBasicMaterial( { map: loader.load('resources/saturnmap.jpg') } );
+        const planetSaturn = new THREE.Mesh( saturnGeometry, saturnMaterial );
+
+        const uranusGeometry = new THREE.SphereGeometry( 1.9, 32, 20 );
+        const uranusMaterial = new THREE.MeshBasicMaterial( { map: loader.load('resources/uranusmap.jpg') } );
+        const planetUranus = new THREE.Mesh( uranusGeometry, uranusMaterial );
+
+        const neptuneGeometry = new THREE.SphereGeometry( 2.1, 32, 20 );
+        const neptuneMaterial = new THREE.MeshBasicMaterial( { map: loader.load('resources/neptunemap.jpg') } );
+        const planetNeptune = new THREE.Mesh( neptuneGeometry, neptuneMaterial );
+        
+        scene.add( planetMercury );
+        scene.add( planetVenus );
+        scene.add( planetEarth );
+        scene.add( planetMars );
+        scene.add( planetJupiter );
+        scene.add( planetSaturn );
+        scene.add( planetUranus );
+        scene.add( planetNeptune );
+
+        hidePlanets([]);
+
+        galaxiesAvailable = ['andromeda', 'hockey', 'ic342', 'magallan', 'milky', 'ngc6753'];
+
+        const panelGeometry = new THREE.PlaneGeometry( 6, 6 );
+        const andromedaMaterial = new THREE.MeshBasicMaterial( {map: loader.load('resources/galaxy-Andromeda.jpg'), side: THREE.DoubleSide} );
+        const hockeyMaterial = new THREE.MeshBasicMaterial( {map: loader.load('resources/galaxy-HockeyStick.jpg'), side: THREE.DoubleSide} );
+        const ic342Material = new THREE.MeshBasicMaterial( {map: loader.load('resources/galaxy-IC342.jpg'), side: THREE.DoubleSide} );
+        const magallanMaterial = new THREE.MeshBasicMaterial( {map: loader.load('resources/galaxy-Magallan.jpg'), side: THREE.DoubleSide} );
+        const milkyMaterial = new THREE.MeshBasicMaterial( {map: loader.load('resources/galaxy-MilkyWay.jpg'), side: THREE.DoubleSide} );
+        const ngc6753Material = new THREE.MeshBasicMaterial( {map: loader.load('resources/galaxy-NGC6753.jpg'), side: THREE.DoubleSide} );
+
+        const andromedaGalaxy = new THREE.Mesh( panelGeometry, andromedaMaterial );
+        const hockeyGalaxy = new THREE.Mesh( panelGeometry, hockeyMaterial );
+        const ic342Galaxy = new THREE.Mesh( panelGeometry, ic342Material );
+        const magallanGalaxy = new THREE.Mesh( panelGeometry, magallanMaterial );
+        const milkyGalaxy = new THREE.Mesh( panelGeometry, milkyMaterial );
+        const ngc6753Galaxy = new THREE.Mesh( panelGeometry, ngc6753Material );
+
+        scene.add( andromedaGalaxy );
+        scene.add( hockeyGalaxy );
+        scene.add( ic342Galaxy );
+        scene.add( magallanGalaxy );
+        scene.add( milkyGalaxy );
+        scene.add( ngc6753Galaxy );
+
+        hideGalaxies([]);
+        
+        var cf = window.innerWidth / window.innerHeight;
+
+        camera.position.z = 100;
+
+        $(document).ready(function(){
+            $(".contenedor--menu").hide();
+        });
+
+        $(".icono").click(function() {
+        $(".contenedor--menu").animate({
+                width: "toggle"
+            });
+        });
+
+        // -- Selects
+        
+        $('#filter').change(function() {
+            var filter = this.value;
+            var jsonData = {'name': filter};
+            var oReq = new XMLHttpRequest();
+            oReq.open("POST", "http://0.0.0.0:8104/filter");
+            oReq.send(JSON.stringify(jsonData));
+        });
+        
+        // -- Checkboxes
+
+        $( '#planets' ).on( 'click', function() {
+            if( $(this).is(':checked') ){
+                var jsonData = {'deployment': 'Nautic', 'task': 'Planet Tracker', 'action': 'stop'};
+                var route = "http://" + config.CENTRAL_HOST + ":" + config.CENTRAL_PORT.toString() + "/api/manager/"
+                var oReq = new XMLHttpRequest();
+                oReq.open("POST", route);
+                oReq.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                oReq.setRequestHeader('Access-Control-Allow-Headers', '*');
+                oReq.send(JSON.stringify(jsonData));
+            } else {
+                var jsonData = {'deployment': 'Nautic', 'task': 'Planet Tracker', 'action': 'stop'};
+                var route = "http://" + config.CENTRAL_HOST + ":" + config.CENTRAL_PORT.toString() + "/api/manager/"
+                var oReq = new XMLHttpRequest();
+                oReq.open("POST", route);
+                oReq.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                oReq.setRequestHeader('Access-Control-Allow-Headers', '*');
+                oReq.send(JSON.stringify(jsonData));
+                sleep(500).then(() => {
+                    hidePlanets([]);
+                });
+            }
+        });
+
+        $( '#galaxies' ).on( 'click', function() {
+            var jsonData = {'name': 'qr'};
+            if( $(this).is(':checked') ){
+                var oReq = new XMLHttpRequest();
+                oReq.open("POST", "http://0.0.0.0:8089/open");
+                oReq.send(JSON.stringify(jsonData));
+            } else {
+                var oReq = new XMLHttpRequest();
+                oReq.open("POST", "http://0.0.0.0:8089/stop");
+                oReq.send(JSON.stringify(jsonData));
+                sleep(500).then(() => {
+                    hideGalaxies([]);
+                });
+            }
+        });
+
+        // Net
+        var socket = io();
+        socket.on('stream', (image) => {
+            var img = document.getElementById('play');
+            img.src = `data:image/jpg;base64,${image}`;
+        });
+
+        socket.on('blobs', (data) => {
+            if(data['coord'].length == 0){
+                hideCubes(11);
+            } else {
+                for(var i = 0; i < 12; i++) {
+                    p = data['coord'][i];
+                    if(i == 0){
+                        relocateCube(cubeA, p, cf);
+                    } else if (i == 1){
+                        relocateCube(cubeB, p, cf);
+                    } else if (i == 2) {
+                        relocateCube(cubeC, p, cf);
+                    } else if (i == 3) {
+                        relocateCube(cubeD, p, cf);
+                    } else if (i == 4){
+                        relocateCube(cubeE, p, cf);
+                    } else if (i == 5) {
+                        relocateCube(cubeF, p, cf);
+                    } else if (i == 6) {
+                        relocateCube(cubeG, p, cf);
+                    } else if (i == 7){
+                        relocateCube(cubeH, p, cf);
+                    } else if (i == 8) {
+                        relocateCube(cubeI, p, cf);
+                    } else if (i == 9) {
+                        relocateCube(cubeJ, p, cf);
+                    } else if (i == 10){
+                        relocateCube(cubeK, p, cf);
+                    } else if (i == 11) {
+                        relocateCube(cubeL, p, cf);
+                    }
+
+                    if(i >= data['coord'].length - 1) {
+                        console.log("Tamaño del array: " + data['coord'].length )
+                        console.log("Se sale del bucle en i: " + i);
+
+                        hideCubes(10 - i);
+
+                        i = 12;
+
+                    }
+
+                }
+            }
+
+        });
+
+        socket.on('aruco', (data) => {
+            var planetsLocated = [];
+            if (data['coord'].length == 0) {
+                hidePlanets(planetsLocated);
+            } else {
+                for(var i = 0; i < data['coord'].length; i++) {
+                    relocatePlanet( data['coord'][i], cf );
+                    planetsLocated.push(data['coord'][i][0]);
+                }
+                hidePlanets(planetsLocated);
+            }
+        });
+
+        
+        socket.on('qr', (data) => {
+            console.log(data);
+            var galaxiesLocated = [];
+            if (data['coord'].length == 0) {
+                hideGalaxies(galaxiesLocated);
+            } else {
+                for(var i = 0; i < data['coord'].length; i++) {
+                    relocateGalaxy( data['coord'][i], cf );
+                    galaxiesLocated.push(data['coord'][i][0]);
+                }
+                hideGalaxies(galaxiesLocated);
+            }
+        });
+        
+
+        const animate = function () {
+            requestAnimationFrame( animate );
+            planetMercury.rotation.y += 0.01;
+            planetVenus.rotation.y += 0.008;
+            planetEarth.rotation.y += 0.005;
+            planetMars.rotation.y += 0.006;
+            planetJupiter.rotation.y += 0.001;
+            planetSaturn.rotation.y += 0.002;
+
+            renderer.render( scene, camera );
+        };
+
+        animate();
+
+        function relocateGalaxy(galaxyCoord, cf) {
+            switch(galaxyCoord[0]) {
+                case 'andromeda':
+                    positionateGalaxy(andromedaGalaxy, galaxyCoord, cf);
+                    break;
+                case 'hockey':
+                    positionateGalaxy(hockeyGalaxy, galaxyCoord, cf);
+                    break;
+                case 'ic342':
+                    positionateGalaxy(ic342Galaxy, galaxyCoord, cf);
+                    break;
+                case 'magallan':
+                    positionateGalaxy(magallanGalaxy, galaxyCoord, cf);
+                    break;
+                case 'milky':
+                    positionateGalaxy(milkyGalaxy, galaxyCoord, cf);
+                    break;
+                case 'ngc6753':
+                    positionateGalaxy(ngc6753Galaxy, galaxyCoord, cf);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function positionateGalaxy(galaxy, p, cf) {
+            galaxy.position.x = p[1] * cf;
+            galaxy.position.y = p[2];
+            galaxy.position.z = 20;
+            galaxy.scale.x = p[3];
+            galaxy.scale.y = p[3];
+            galaxy.scale.z = p[3];
+        }
+
+        function hideGalaxies(galaxiesLocated) {
+            var p = ['', 1000, 1000, 0.1];
+            for(var i = 0; i < galaxiesAvailable.length; i++) {
+                if(!galaxiesLocated.includes(galaxiesAvailable[i])) {
+                    switch(galaxiesAvailable[i]) {
+                        case 'andromeda':
+                            positionateGalaxy(andromedaGalaxy, p, cf);
+                            break;
+                        case 'hockey':
+                            positionateGalaxy(hockeyGalaxy, p, cf);
+                            break;
+                        case 'ic342':
+                            positionateGalaxy(ic342Galaxy, p, cf);
+                            break;
+                        case 'magallan':
+                            positionateGalaxy(magallanGalaxy, p, cf);
+                            break;
+                        case 'milky':
+                            positionateGalaxy(milkyGalaxy, p, cf);
+                            break;
+                        case 'ngc6753':
+                            positionateGalaxy(ngc6753Galaxy, p, cf);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+
+        function relocatePlanet(planetCoord, cf) {
+            switch(planetCoord[0]){
+                case 0:
+                    positionatePlanet(planetMercury, planetCoord, cf, 10);
+                    break;
+                case 1:
+                    positionatePlanet(planetVenus, planetCoord, cf, 15);
+                    break;
+                case 2:
+                    positionatePlanet(planetEarth, planetCoord, cf, 15);
+                    break;
+                case 3:
+                    positionatePlanet(planetMars, planetCoord, cf, 10);
+                    break;
+                case 4:
+                    positionatePlanet(planetJupiter, planetCoord, cf, 20);
+                    break;
+                case 5:
+                    positionatePlanet(planetSaturn, planetCoord, cf, 25);
+                    break;
+                case 6:
+                    positionatePlanet(planetUranus, planetCoord, cf, 25);
+                    break;
+                case 7:
+                    positionatePlanet(planetNeptune, planetCoord, cf, 25);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function positionatePlanet(planet, p, cf, height) {
+            planet.position.x = p[1] * cf;
+            planet.position.y = p[2] + height;
+            planet.scale.x = p[3];
+            planet.scale.y = p[3];
+            planet.scale.z = p[3];
+        }
+
+        function hidePlanets(planetsLocated) {
+            var p = [0, 1000, 1000, 0.1];
+            for(var i = 0; i < 8; i++) {
+                if(!planetsLocated.includes(i)) {
+                    switch(i) {
+                        case 0:
+                            positionatePlanet(planetMercury, p, cf, 0);
+                            break;
+                        case 1:
+                            positionatePlanet(planetVenus, p, cf, 0);
+                            break;
+                        case 2:
+                            positionatePlanet(planetEarth, p, cf, 0);
+                            break;
+                        case 3:
+                            positionatePlanet(planetMars, p, cf, 0);
+                            break;
+                        case 4:
+                            positionatePlanet(planetJupiter, p, cf, 0);
+                            break;
+                        case 5:
+                            positionatePlanet(planetSaturn, p, cf, 0);
+                            break;
+                        case 6:
+                            positionatePlanet(planetUranus, p, cf, 0);
+                            break;
+                        case 7:
+                            positionatePlanet(planetNeptune, p, cf, 0);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+
+        function relocateCube(cube, p, cf) {
+            cube.position.x = p[0] * cf;
+            cube.position.y = p[1];
+            cube.scale.x = p[2]*2;
+            cube.scale.y = p[2]*2;
+            cube.scale.z = p[2]*2;
+        }
+
+        function hideCubes(stars) {
+            var p = [1000, 1000, 0.1];
+            for(var i = 0; i <= stars; i++) {
+                if(i == 0) {
+                    relocateCube(cubeL, p, 1);
+                }
+                if(i == 1) {
+                    relocateCube(cubeK, p, 1);
+                }
+                if(i == 2) {
+                    relocateCube(cubeJ, p, 1);
+                }
+                if(i == 3) {
+                    relocateCube(cubeI, p, 1);
+                }
+                if(i == 4) {
+                    relocateCube(cubeH, p, 1);
+                }
+                if(i == 5) {
+                    relocateCube(cubeG, p, 1);
+                }
+                if(i == 6) {
+                    relocateCube(cubeF, p, 1);
+                }
+                if(i == 7) {
+                    relocateCube(cubeE, p, 1);
+                }
+                if(i == 8) {
+                    relocateCube(cubeD, p, 1);
+                }
+                if(i == 9) {
+                    relocateCube(cubeC, p, 1);
+                }
+                if(i == 10) {
+                    relocateCube(cubeB, p, 1);
+                }
+                if(i == 11) {
+                    relocateCube(cubeA, p, 1);
+                }
+            }
+        }
+
+        function sleep(time) {
+            return new Promise((resolve) => setTimeout(resolve, time));
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: capturer1
+  labels:
+    app: cap1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cap1
+  template:
+    metadata:
+      labels:
+        app: cap1
+    spec:
+      nodeName: aldres
+      containers:
+      - name: api1
+        volumeMounts:
+        - mountPath: /dev/video0
+          name: dev-video0
+        securityContext:
+          privileged: true
+        image: aldresdev/camera-proc:amd
+
+
+        
+        env:
+          - name: HOST_CLIENT
+            value: "192.168.1.21"
+          - name: PORT_CLIENT
+            value: "30006"
+      volumes:
+      - name: dev-video0
+        hostPath:
+          path: /dev/video0
+
+        

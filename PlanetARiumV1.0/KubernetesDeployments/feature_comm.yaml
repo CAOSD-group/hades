@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feature-communicator-nautic
+  labels:
+    app: feature
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: feature
+  template:
+    metadata:
+      labels:
+        app: feature
+    spec:
+      containers:
+      - name: api
+        image: aldresdev/feature_communicator:v1
+        env:
+          - name: CENTRAL_HOST
+            value: "192.168.1.21"
+          - name: CENTRAL_PORT
+            value: "8000"
+          - name: SERVER_HOST
+            value: "192.168.1.21"
+          - name: FRAME_PORT
+            value: "30002"
+          - name: REQUEST_PORT
+            value: "30003"
+          - name: "PLANET_FEATURE"
+            value: "included"
+          - name: "GALAXY_FEATURE"
+            value: "included"
+        ports:
+          - containerPort: 30002
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: feature-service1
+spec:
+  type: NodePort
+  selector:
+    app: feature
+  ports:
+    - port: 80
+      targetPort: 30002
+      nodePort: 30002
+      
